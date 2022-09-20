@@ -20,9 +20,24 @@ function output(text) {
 // **************************************
 // The old-n-busted callback way
 
+function addItemToUi(item) {
+  const newChild = document.createElement("li");
+  newChild.innerHTML = `${item} - 🟡`;
+  newChild.dataset.name = item;
+  document.getElementById("app").appendChild(newChild);
+}
+
+function resolveItemInUi(item) {
+  const elm = document.querySelector(`[data-name=${item}]`);
+  elm.innerHTML = `${item} - 💚`;
+}
+
 function getFile(file) {
-  fakeAjax(file, function (text) {
-    // what do we do here?
+  addItemToUi(file);
+
+  fakeAjax(file, function () {
+    output(file);
+    resolveItemInUi(file);
   });
 }
 
