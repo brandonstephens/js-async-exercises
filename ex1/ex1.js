@@ -26,13 +26,16 @@ let files = [
 ];
 
 function handleResponse(item) {
+  // update global files array with the item that resolved
   files = [
     ...files.filter((x) => x.name !== item),
     { name: item, resolved: true },
   ];
 
+  // check that all items have resolved
   let ready = files.reduce((acc, val) => (acc ? val.resolved : false), true);
 
+  // return complete if all items resolved
   if (ready) {
     console.log("Complete!");
   } else {
