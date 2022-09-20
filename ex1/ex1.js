@@ -19,29 +19,35 @@ function output(text) {
 
 // **************************************
 // The old-n-busted callback way
+let files = [
+  { name: "file1", resolved: false },
+  { name: "file2", resolved: false },
+  { name: "file3", resolved: false },
+];
 
-function addItemToUi(item) {
-  const newChild = document.createElement("li");
-  newChild.innerHTML = `${item} - 🟡`;
-  newChild.dataset.name = item;
-  document.getElementById("app").appendChild(newChild);
-}
+function handleResponse(item) {
+  files = [
+    ...files.filter((x) => x.name !== item),
+    { name: item, resolved: true },
+  ];
 
-function resolveItemInUi(item) {
-  const elm = document.querySelector(`[data-name=${item}]`);
-  elm.innerHTML = `${item} - 💚`;
+  let ready = files.reduce((acc, val) => (acc ? val.resolved : false), true);
+
+  if (ready) {
+    console.log("Complete!");
+  } else {
+    return;
+  }
 }
 
 function getFile(file) {
-  addItemToUi(file);
-
   fakeAjax(file, function () {
     output(file);
-    resolveItemInUi(file);
+    handleResponse(file);
   });
 }
 
 // request all files at once in "parallel"
-getFile("file1");
-getFile("file2");
-getFile("file3");
+files.forEach((element) => {
+  getFile(element.name);
+});
